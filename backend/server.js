@@ -6,30 +6,35 @@ const cors = require('cors');
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server, {
-  cors: {
-    origin: "http://127.0.0.1:5500",
-    methods: ["GET", "POST"]
-  }
+  cors: { origin: '*',}
 });
-const port = 3000;
+
+const port = process.env.PORT || 3000;
 
 app.use(cors());
 
-app.get('/', (req, res) => {
-  res.send({ message: 'Hello from server' });
-  console.log('it is working!');
+app.get('/status', (req, res) => {
+  res.send({ status: 'ok' });
 });
 
 io.on('connection', (socket) => {
-  console.log('a user connected');
+  console.log('A user connected');
   
   const intervalId = setInterval(() => {
-    socket.emit('message', 'Hello from server');
+    const data = {
+      timeStamp: new Date().toISOString(),
+      value: Math.random() * 100,
+    }
+    socket.emit('new_data', data);
   }, 1000);
 
   socket.on('disconnect', () => {
-    console.log('a user disconnected');
+    console.log('A user disconnected');
     clearInterval(intervalId);
+  });
+
+  socket.on('error', (error) => {
+    console.error(error);
   });
 });
 
