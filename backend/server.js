@@ -23,7 +23,7 @@ io.on('connection', (socket) => {
   const intervalId = setInterval(() => {
     const data = {
       timeStamp: new Date().toISOString(),
-      value: Math.random() * 100,
+      value: Math.random() * (32 - 18) + 18,
     }
     socket.emit('new_data', data);
   }, 1000);
