@@ -50,8 +50,8 @@ $(document).ready(function() {
 
       // Remove old data if too many points
       if (chart.data.labels.length > 20) {
-        chart.data.labels.shift();
-        chart.data.datasets[0].data.shift();
+        chart.data.labels = chart.data.labels.slice(-20);
+        chart.data.datasets[0].data = chart.data.datasets[0].data.slice(-20);
       }
 
       chart.update();
